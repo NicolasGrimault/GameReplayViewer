@@ -5,8 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GameReplayViewer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="500" Width="1000">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <ListView x:Name="GameReplayListView" Grid.Column="0" Margin="10" ItemsSource="{Binding Path=GameReplayItems}">
+        </ListView>
+        <Grid Grid.Column="1">
+            <MediaElement x:Name="GameReplayMediaElement" Margin="10" Source="http://hubblesource.stsci.edu/sources/video/clips/details/images/hst_1.mpg"/>
+        </Grid>
     </Grid>
 </Window>
