@@ -4,17 +4,34 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GameReplayViewer"
+        xmlns:converters="clr-namespace:GameReplayViewer.Converter"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="1000">
+        Title="Game Review Player" Height="600" Width="1000">
+    <Window.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters:BooleanToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" IsInverse="True"/>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="200" MinWidth="100"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="*" MinWidth="500"/>
         </Grid.ColumnDefinitions>
-        <ListView x:Name="GameReplayListView" Grid.Column="0" Margin="10" ItemsSource="{Binding Path=GameReplayItems}">
+        <ListView x:Name="GameReplayListView" Grid.Column="0" Margin="10" ItemsSource="{Binding Path=GameReplayItems}" SelectedItem="{Binding Path=SelectedGameReplayItems}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
+                    <GridViewColumn Header="Game" DisplayMemberBinding="{Binding Game.Name}" />
+                </GridView>
+            </ListView.View>
         </ListView>
-        <Grid Grid.Column="1">
-            <MediaElement x:Name="GameReplayMediaElement" Margin="10" Source="http://hubblesource.stsci.edu/sources/video/clips/details/images/hst_1.mpg"/>
-        </Grid>
+        <GridSplitter x:Name="gridSplitter" Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
+        <StackPanel Grid.Column="2" Orientation="Vertical">
+            <MediaElement x:Name="GameReplayMediaElement" Margin="10" Source="{Binding Path=SelectedGameReplay.FullPath}"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="Play" Command="{Binding Path=PlayCommand}" Visibility="{Binding Path=IsVideoPlaying, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
+                <Button Content="Pause" Command="{Binding Path=PauseCommand}" Visibility="{Binding Path=IsVideoPlaying, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Window>
