@@ -12,7 +12,7 @@ namespace GameReplayViewer.Model
         private string path;
         private Game game;
 
-        public string FullPath => string.Format("{0}{1}", game.Path, this.Path);
+        public string FullPath => string.Format("{0}\\{1}", game.Path, this.Path);
 
         public Game Game
         {

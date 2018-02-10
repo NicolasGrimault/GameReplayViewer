@@ -17,7 +17,7 @@
             <ColumnDefinition Width="5"/>
             <ColumnDefinition Width="*" MinWidth="500"/>
         </Grid.ColumnDefinitions>
-        <ListView x:Name="GameReplayListView" Grid.Column="0" Margin="10" ItemsSource="{Binding Path=GameReplayItems}" SelectedItem="{Binding Path=SelectedGameReplayItems}">
+        <ListView x:Name="GameReplayListView" Grid.Column="0" Margin="10" ItemsSource="{Binding Path=GameReplayItems}" SelectedItem="{Binding Path=SelectedGameReplay}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />

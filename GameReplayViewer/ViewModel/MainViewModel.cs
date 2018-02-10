@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Input;
 using Prism.Commands;
 using System.ComponentModel;
+using GameReplayViewer.Services;
 
 namespace GameReplayViewer.ViewModel
 {
@@ -12,8 +13,9 @@ namespace GameReplayViewer.ViewModel
 
         public MainViewModel(IMediaService mediaService)
         {
-            Game Overwatch = new Game() { Name = "Overwatch", Path = "D:/Nicolas/Documents/Overwatch/videos/overwatch/" };
-            gameReplayItems = new List<GameReplay>() { new GameReplay() { Path = "soldier rocket 3kills_17-08-24_20-41-07.mp4", Name = "soldier rocket 3kills", Game = Overwatch } };
+            var gameseeker = new GameSeekerServices();
+            gameseeker.Search(new string[] { "D:/Nicolas/" });
+            gameReplayItems = gameseeker.gameReplayList;
             selectedGameReplay = gameReplayItems.First();
             this.PlayCommand = new DelegateCommand(this.Play);
             this.PauseCommand = new DelegateCommand(this.Pause);
@@ -25,7 +27,6 @@ namespace GameReplayViewer.ViewModel
             this.mediaService = mediaService;
 
         }
-
 
         private GameReplay selectedGameReplay;
         private List<GameReplay> gameReplayItems;
@@ -89,7 +90,9 @@ namespace GameReplayViewer.ViewModel
         public GameReplay SelectedGameReplay
         {
             get { return selectedGameReplay; }
-            set { selectedGameReplay = value; }
+            set { selectedGameReplay = value;
+                NotifyPropertyChanged("SelectedGameReplay");
+            }
         }
 
         public List<GameReplay> GameReplayItems
