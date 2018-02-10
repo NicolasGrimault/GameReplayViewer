@@ -29,7 +29,7 @@ namespace GameReplayViewer
 
         void IMediaService.FastForward()
         {
-            this.GameReplayMediaElement.Position += TimeSpan.FromSeconds(10);
+            this.GameReplayMediaElement.Position += TimeSpan.FromSeconds(5);
         }
 
         void IMediaService.Pause()
@@ -44,7 +44,7 @@ namespace GameReplayViewer
 
         void IMediaService.Rewind()
         {
-            this.GameReplayMediaElement.Position -= TimeSpan.FromSeconds(10);
+            this.GameReplayMediaElement.Position -= TimeSpan.FromSeconds(5);
         }
 
         void IMediaService.Stop()

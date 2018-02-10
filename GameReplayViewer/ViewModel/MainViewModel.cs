@@ -17,6 +17,11 @@ namespace GameReplayViewer.ViewModel
             selectedGameReplay = gameReplayItems.First();
             this.PlayCommand = new DelegateCommand(this.Play);
             this.PauseCommand = new DelegateCommand(this.Pause);
+            this.FastForwardCommand = new DelegateCommand(this.FastForward);
+            this.RewindCommand = new DelegateCommand(this.Rewind);
+            this.StopCommand = new DelegateCommand(this.Stop);
+
+
             this.mediaService = mediaService;
 
         }
@@ -43,17 +48,32 @@ namespace GameReplayViewer.ViewModel
         {
             mediaService.Play();
             this.IsVideoPlaying = true;
-
         }
         private void Pause()
         {
             mediaService.Pause();
             this.IsVideoPlaying = false;
-
         }
+        private void Stop()
+        {
+            mediaService.Stop();
+            this.IsVideoPlaying = false;
+        }
+        private void Rewind()
+        {
+            mediaService.Rewind();
+        }
+        private void FastForward()
+        {
+            mediaService.FastForward();
+        }
+
 
         public ICommand PlayCommand { get; private set; }
         public ICommand PauseCommand { get; private set; }
+        public ICommand FastForwardCommand { get; private set; }
+        public ICommand RewindCommand { get; private set; }
+        public ICommand StopCommand { get; private set; }
 
 
         public bool IsVideoPlaying

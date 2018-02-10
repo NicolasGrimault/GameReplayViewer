@@ -29,8 +29,11 @@
         <StackPanel Grid.Column="2" Orientation="Vertical">
             <MediaElement x:Name="GameReplayMediaElement" LoadedBehavior="Manual" Margin="10" Source="{Binding Path=SelectedGameReplay.FullPath}"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="Rewind" Command="{Binding Path=RewindCommand}" Visibility="{Binding Path=IsVideoPlaying, Converter={StaticResource BoolToVisibilityConverter}}"/>
                 <Button Content="Play" Command="{Binding Path=PlayCommand}" CommandParameter="GameReplayMediaElement" Visibility="{Binding Path=IsVideoPlaying, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
                 <Button Content="Pause" Command="{Binding Path=PauseCommand}" Visibility="{Binding Path=IsVideoPlaying, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <Button Content="Stop" Command="{Binding Path=StopCommand}" Visibility="{Binding Path=IsVideoPlaying, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <Button Content="FastForward" Command="{Binding Path=FastForwardCommand}" Visibility="{Binding Path=IsVideoPlaying, Converter={StaticResource BoolToVisibilityConverter}}"/>
             </StackPanel>
         </StackPanel>
     </Grid>
