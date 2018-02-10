@@ -19,12 +19,37 @@ namespace GameReplayViewer
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IMediaService
     {
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = new MainViewModel();
+            this.DataContext = new MainViewModel(this);
+        }
+
+        void IMediaService.FastForward()
+        {
+            this.GameReplayMediaElement.Position += TimeSpan.FromSeconds(10);
+        }
+
+        void IMediaService.Pause()
+        {
+            this.GameReplayMediaElement.Pause();
+        }
+
+        void IMediaService.Play()
+        {
+            this.GameReplayMediaElement.Play();
+        }
+
+        void IMediaService.Rewind()
+        {
+            this.GameReplayMediaElement.Position -= TimeSpan.FromSeconds(10);
+        }
+
+        void IMediaService.Stop()
+        {
+            this.GameReplayMediaElement.Stop();
         }
     }
 }

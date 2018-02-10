@@ -27,9 +27,9 @@
         </ListView>
         <GridSplitter x:Name="gridSplitter" Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
         <StackPanel Grid.Column="2" Orientation="Vertical">
-            <MediaElement x:Name="GameReplayMediaElement" Margin="10" Source="{Binding Path=SelectedGameReplay.FullPath}"/>
+            <MediaElement x:Name="GameReplayMediaElement" LoadedBehavior="Manual" Margin="10" Source="{Binding Path=SelectedGameReplay.FullPath}"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="Play" Command="{Binding Path=PlayCommand}" Visibility="{Binding Path=IsVideoPlaying, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
+                <Button Content="Play" Command="{Binding Path=PlayCommand}" CommandParameter="GameReplayMediaElement" Visibility="{Binding Path=IsVideoPlaying, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
                 <Button Content="Pause" Command="{Binding Path=PauseCommand}" Visibility="{Binding Path=IsVideoPlaying, Converter={StaticResource BoolToVisibilityConverter}}"/>
             </StackPanel>
         </StackPanel>
