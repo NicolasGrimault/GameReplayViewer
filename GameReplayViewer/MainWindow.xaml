@@ -30,25 +30,40 @@
             </ListView>
         </StackPanel>
 
-        
+
         <GridSplitter x:Name="gridSplitter" Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
-        <StackPanel Grid.Column="2" Orientation="Vertical">
-            <StackPanel.Resources>
-                    <x:Array Type="{x:Type system:String}" x:Key="VlcOptions">
-                        <system:String>-I</system:String>
-                        <system:String>--dummy-quiet</system:String>
-                        <system:String>--ignore-config</system:String>
-                        <system:String>--no-video-title</system:String>
-                        <system:String>--no-sub-autodetect-file</system:String>
-                    </x:Array>
-                </StackPanel.Resources>
-                <wpf:VlcPlayer x:Name="Player" VlcOption="{StaticResource VlcOptions}" LibVlcPath="..\..\LibVlc" />
-            <StackPanel Opacity="0.8" VerticalAlignment="Bottom">
-                <StackPanel Orientation="Horizontal">
-                    <Button Content="Play" HorizontalAlignment="Stretch" Click="Play_Click" />
-                    <Button Content="Pause" Click="Pause_Click" />
-                    <Button Content="Stop" Click="Stop_Click" />
-                    <Grid Background="#FFDDDDDD" Width="70">
+        <Grid Grid.Column="2">
+            <Grid.Resources>
+                <x:Array Type="{x:Type system:String}" x:Key="VlcOptions">
+                    <system:String>-I</system:String>
+                    <system:String>--dummy-quiet</system:String>
+                    <system:String>--ignore-config</system:String>
+                    <system:String>--no-video-title</system:String>
+                    <system:String>--no-sub-autodetect-file</system:String>
+                </x:Array>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <wpf:VlcPlayer x:Name="Player" Grid.Row="0" VlcOption="{StaticResource VlcOptions}" LibVlcPath="..\..\LibVlc" />
+            <StackPanel Opacity="0.8" Grid.Row="1"  VerticalAlignment="Bottom">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <Button Content="Play" HorizontalAlignment="Stretch" Click="Play_Click" />
+                        <Button Content="Pause" Click="Pause_Click" />
+                        <Button Content="Stop" Click="Stop_Click" />
+                    </StackPanel>
+
+                    <Grid  Grid.Column="3" Background="#FFDDDDDD" Width="200">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition/>
@@ -56,9 +71,9 @@
                         <TextBlock Text="Volume:" VerticalAlignment="Center"></TextBlock>
                         <Slider Grid.Column="1" Value="{Binding Volume, ElementName=Player}" VerticalAlignment="Center" Maximum="100"/>
                     </Grid>
-                </StackPanel>
+                </Grid>
                 <ProgressBar x:Name="ProgressBar" Opacity="0.8" Value="{Binding Position, ElementName=Player}" VerticalAlignment="Bottom" Height="10" Maximum="1" SmallChange="0.00001" MouseDown="ProgressBar_MouseDown" />
             </StackPanel>
-        </StackPanel>
+        </Grid>
     </Grid>
 </Window>

@@ -22,6 +22,7 @@ namespace GameReplayViewer.Services
         /// </summary>
         public void Search()
         {
+            gameReplayList = new List<GameReplay>();
             string userProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             string DocumentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             SearchInPath(userProfilePath);
