@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wpf="clr-namespace:Meta.Vlc.Wpf;assembly=Meta.Vlc.Wpf"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:GameReplayViewer"
         xmlns:converters="clr-namespace:GameReplayViewer.Converter"
         mc:Ignorable="d"
@@ -17,20 +19,45 @@
             <ColumnDefinition Width="5"/>
             <ColumnDefinition Width="*" MinWidth="500"/>
         </Grid.ColumnDefinitions>
-        <ListView x:Name="GameReplayListView" Grid.Column="0" Margin="10" ItemsSource="{Binding Path=GameReplayItems}" SelectedItem="{Binding Path=SelectedGameReplayItems}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
-                    <GridViewColumn Header="Game" DisplayMemberBinding="{Binding Game.Name}" />
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <StackPanel Grid.Column="0" Orientation="Vertical">
+            <Button Content="Load all Game" Command="{Binding Path=LoadGamesCommand }"/>
+            <ListView x:Name="GameReplayListView"  Margin="10" ItemsSource="{Binding Path=GameReplayItems}" SelectedItem="{Binding Path=SelectedGameReplay}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </StackPanel>
+
+        
         <GridSplitter x:Name="gridSplitter" Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
         <StackPanel Grid.Column="2" Orientation="Vertical">
-            <MediaElement x:Name="GameReplayMediaElement" Margin="10" Source="{Binding Path=SelectedGameReplay.FullPath}"/>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="Play" Command="{Binding Path=PlayCommand}" Visibility="{Binding Path=IsVideoPlaying, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
-                <Button Content="Pause" Command="{Binding Path=PauseCommand}" Visibility="{Binding Path=IsVideoPlaying, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            <StackPanel.Resources>
+                    <x:Array Type="{x:Type system:String}" x:Key="VlcOptions">
+                        <system:String>-I</system:String>
+                        <system:String>--dummy-quiet</system:String>
+                        <system:String>--ignore-config</system:String>
+                        <system:String>--no-video-title</system:String>
+                        <system:String>--no-sub-autodetect-file</system:String>
+                    </x:Array>
+                </StackPanel.Resources>
+                <wpf:VlcPlayer x:Name="Player" VlcOption="{StaticResource VlcOptions}" LibVlcPath="..\..\LibVlc" />
+            <StackPanel Opacity="0.8" VerticalAlignment="Bottom">
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Play" HorizontalAlignment="Stretch" Click="Play_Click" />
+                    <Button Content="Pause" Click="Pause_Click" />
+                    <Button Content="Stop" Click="Stop_Click" />
+                    <Grid Background="#FFDDDDDD" Width="70">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Volume:" VerticalAlignment="Center"></TextBlock>
+                        <Slider Grid.Column="1" Value="{Binding Volume, ElementName=Player}" VerticalAlignment="Center" Maximum="100"/>
+                    </Grid>
+                </StackPanel>
+                <ProgressBar x:Name="ProgressBar" Opacity="0.8" Value="{Binding Position, ElementName=Player}" VerticalAlignment="Bottom" Height="10" Maximum="1" SmallChange="0.00001" MouseDown="ProgressBar_MouseDown" />
             </StackPanel>
         </StackPanel>
     </Grid>

@@ -3,60 +3,67 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Prism.Commands;
+using System.ComponentModel;
+using GameReplayViewer.Services;
+using System;
+using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 namespace GameReplayViewer.ViewModel
 {
-    public class MainViewModel
+    public class MainViewModel : INotifyPropertyChanged
     {
-        public MainViewModel()
+        private GameReplaySeekerServices gameSeeker = new GameReplaySeekerServices();
+
+        public MainViewModel(PlayerServicesInterface mediaService)
         {
-            Game Overwatch = new Game() { Name = "Overwatch", Path = "D:/Nicolas/Documents/Overwatch/videos/overwatch/" };
-            gameReplayItems = new List<GameReplay>() { new GameReplay() { Path = "soldier rocket 3kills_17-08-24_20-41-07.mp4", Name = "soldier rocket 3kills", Game = Overwatch } };
-            selectedGameReplay = gameReplayItems.First();
-            this.PlayCommand = new DelegateCommand(this.Play, this.CanBeResumed);
-            this.PauseCommand = new DelegateCommand(this.Pause, this.CanBePaused);
+            LoadGamesCommand = new DelegateCommand(this.LoadGamesReplay);
+            this.mediaService = mediaService;
 
         }
 
         private GameReplay selectedGameReplay;
-        private List<GameReplay> gameReplayItems;
-        private bool isVideoPlaying = true;
+        private ObservableCollection<GameReplay> gameReplayItems;
 
 
-
-        private void Play() {
-
-        }
-        private void Pause()
+        public async void LoadGamesReplay()
         {
-
+           await Task.Run(() => this.gameSeeker.Search());
+            GameReplayItems = new ObservableCollection<GameReplay>(this.gameSeeker.gameReplayList);
         }
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public ICommand PlayCommand { get; private set; }
-        public ICommand PauseCommand { get; private set; }
-
-
-        public bool IsVideoPlaying
+        protected void NotifyPropertyChanged(string info)
         {
-            get { return isVideoPlaying; }
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(info));
+            }
         }
-        public bool IsVideoPaused
-        {
-            get { return !isVideoPlaying; }
-        }
-        private bool CanBePaused() => IsVideoPaused;
-        private bool CanBeResumed() => IsVideoPlaying;
+
+        public PlayerServicesInterface mediaService { get; private set; }
+
+        public ICommand LoadGamesCommand { get; private set; }
 
         public GameReplay SelectedGameReplay
         {
             get { return selectedGameReplay; }
-            set { selectedGameReplay = value; }
+            set
+            {
+                selectedGameReplay = value;
+                mediaService.LoadVideo(value.FullPath);
+                NotifyPropertyChanged("SelectedGameReplay");
+            }
         }
 
-        public List<GameReplay> GameReplayItems
+        public ObservableCollection<GameReplay> GameReplayItems
         {
             get { return gameReplayItems; }
-            set { gameReplayItems = value; }
+            set
+            {
+                gameReplayItems = value;
+                NotifyPropertyChanged("GameReplayItems");
+            }
         }
     }
 }

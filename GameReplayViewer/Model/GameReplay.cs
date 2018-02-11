@@ -1,38 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace GameReplayViewer.Model
 {
     public class GameReplay
     {
-        private string name;
-        private string path;
-        private Game game;
+        private string fullPath;
 
-        public string FullPath => string.Format("{0}{1}", game.Path, this.Path);
-
-        public Game Game
+        public GameReplay(string fullPath)
         {
-            get { return game; }
-            set { game = value; }
+            this.fullPath = fullPath;
+        }
+
+        public string FullPath 
+        {
+            get { return fullPath; }
+            set { fullPath = value; }
         }
 
         public string Name
         {
-            get { return name; }
-            set { name = value; }
+            get { return Path.GetFileNameWithoutExtension(fullPath); }
         }
 
-        public string Path
+        public string FileName
         {
-            get { return path; }
-            set { path = value; }
+            get { return Path.GetFileName(fullPath); }
         }
-
-
-
     }
 }
