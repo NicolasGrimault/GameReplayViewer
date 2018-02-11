@@ -5,6 +5,7 @@ using System.Windows.Input;
 using Prism.Commands;
 using System.ComponentModel;
 using GameReplayViewer.Services;
+using System;
 
 namespace GameReplayViewer.ViewModel
 {
@@ -13,14 +14,14 @@ namespace GameReplayViewer.ViewModel
 
         public MainViewModel(IMediaService mediaService)
         {
-            var gameseeker = new GameSeekerServices();
-            gameseeker.Search(new string[] { "D:/Nicolas/" });
+            var gameseeker = new GameReplaySeekerServices();
+
+            gameseeker.Search();
+
             gameReplayItems = gameseeker.gameReplayList;
-            selectedGameReplay = gameReplayItems.First();
+            //selectedGameReplay = gameReplayItems.First();
             this.PlayCommand = new DelegateCommand(this.Play);
             this.PauseCommand = new DelegateCommand(this.Pause);
-            this.FastForwardCommand = new DelegateCommand(this.FastForward);
-            this.RewindCommand = new DelegateCommand(this.Rewind);
             this.StopCommand = new DelegateCommand(this.Stop);
 
 
@@ -60,20 +61,10 @@ namespace GameReplayViewer.ViewModel
             mediaService.Stop();
             this.IsVideoPlaying = false;
         }
-        private void Rewind()
-        {
-            mediaService.Rewind();
-        }
-        private void FastForward()
-        {
-            mediaService.FastForward();
-        }
 
 
         public ICommand PlayCommand { get; private set; }
         public ICommand PauseCommand { get; private set; }
-        public ICommand FastForwardCommand { get; private set; }
-        public ICommand RewindCommand { get; private set; }
         public ICommand StopCommand { get; private set; }
 
 
@@ -90,7 +81,10 @@ namespace GameReplayViewer.ViewModel
         public GameReplay SelectedGameReplay
         {
             get { return selectedGameReplay; }
-            set { selectedGameReplay = value;
+            set
+            {
+                selectedGameReplay = value;
+                IsVideoPlaying = false;
                 NotifyPropertyChanged("SelectedGameReplay");
             }
         }

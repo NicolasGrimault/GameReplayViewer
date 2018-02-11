@@ -28,13 +28,45 @@
         <GridSplitter x:Name="gridSplitter" Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
         <StackPanel Grid.Column="2" Orientation="Vertical">
             <MediaElement x:Name="GameReplayMediaElement" LoadedBehavior="Manual" Margin="10" Source="{Binding Path=SelectedGameReplay.FullPath}"/>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="Rewind" Command="{Binding Path=RewindCommand}" Visibility="{Binding Path=IsVideoPlaying, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <Button Content="Play" Command="{Binding Path=PlayCommand}" CommandParameter="GameReplayMediaElement" Visibility="{Binding Path=IsVideoPlaying, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
-                <Button Content="Pause" Command="{Binding Path=PauseCommand}" Visibility="{Binding Path=IsVideoPlaying, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <Button Content="Stop" Command="{Binding Path=StopCommand}" Visibility="{Binding Path=IsVideoPlaying, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <Button Content="FastForward" Command="{Binding Path=FastForwardCommand}" Visibility="{Binding Path=IsVideoPlaying, Converter={StaticResource BoolToVisibilityConverter}}"/>
-            </StackPanel>
+            
+            <StatusBar>
+                <StatusBar.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                    </ItemsPanelTemplate>
+                </StatusBar.ItemsPanel>
+                <StatusBarItem>
+                    <TextBlock Name="lblProgressStatus">00:00:00</TextBlock>
+                </StatusBarItem>
+                <StatusBarItem Grid.Column="1" HorizontalContentAlignment="Stretch">
+                    <Slider Name="sliProgress" Thumb.DragStarted="sliProgress_DragStarted"  Thumb.DragCompleted="sliProgress_DragCompleted" ValueChanged="sliProgress_ValueChanged" />
+                </StatusBarItem>
+                <StatusBarItem Grid.Column="2">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Content="Play" 
+                                Margin="5"
+                                Command="{Binding Path=PlayCommand}" 
+                                CommandParameter="GameReplayMediaElement" 
+                                Visibility="{Binding Path=IsVideoPlaying, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
+                        <Button Content="Pause" 
+                                Margin="5"
+                                Command="{Binding Path=PauseCommand}" 
+                                Visibility="{Binding Path=IsVideoPlaying, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <Button Content="Stop" 
+                                Margin="5"
+                                Command="{Binding Path=StopCommand}" 
+                                Visibility="{Binding Path=IsVideoPlaying, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    </StackPanel>
+                </StatusBarItem>
+            </StatusBar>
+
+
         </StackPanel>
     </Grid>
 </Window>

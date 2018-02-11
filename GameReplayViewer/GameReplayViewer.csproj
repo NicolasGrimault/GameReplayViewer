@@ -67,7 +67,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
-    <Compile Include="Services\GameSeekerServices.cs" />
+    <Compile Include="Services\GameReplaySeekerServices.cs" />
     <Compile Include="Services\IMediaService.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Page Include="MainWindow.xaml">
@@ -84,7 +84,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Game.cs" />
     <Compile Include="Model\GameReplay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
