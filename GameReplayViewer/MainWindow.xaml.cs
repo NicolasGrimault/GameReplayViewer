@@ -1,8 +1,13 @@
-﻿using GameReplayViewer.ViewModel;
+﻿using GameReplayViewer.Services;
+using GameReplayViewer.ViewModel;
+using Meta.Vlc.Wpf;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,60 +26,48 @@ namespace GameReplayViewer
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, IMediaService
+    public partial class MainWindow : Window, PlayerServicesInterface
     {
         public MainWindow()
         {
             InitializeComponent();
             this.DataContext = new MainViewModel(this);
-            DispatcherTimer timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(1);
-            timer.Tick += timer_Tick;
-            timer.Start();
-
         }
-        private bool userIsDraggingSlider = false;
 
-        private void timer_Tick(object sender, EventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
-            if ((GameReplayMediaElement.Source != null) && (GameReplayMediaElement.NaturalDuration.HasTimeSpan) && (!userIsDraggingSlider))
-            {
-                sliProgress.Minimum = 0;
-                sliProgress.Maximum = GameReplayMediaElement.NaturalDuration.TimeSpan.TotalSeconds;
-                sliProgress.Value = GameReplayMediaElement.Position.TotalSeconds;
-            }
+            Player.Dispose();
+            ApiManager.ReleaseAll();
+            base.OnClosing(e);
         }
 
-
-        void IMediaService.Pause()
+        private void Play_Click(object sender, RoutedEventArgs e)
         {
-            this.GameReplayMediaElement.Pause();
+            Player.Play();
         }
 
-        void IMediaService.Play()
+        private void Pause_Click(object sender, RoutedEventArgs e)
         {
-            this.GameReplayMediaElement.Play();
+            Player.PauseOrResume();
         }
 
-        void IMediaService.Stop()
+        private void Stop_Click(object sender, RoutedEventArgs e)
         {
-            this.GameReplayMediaElement.Stop();
+            Player.Stop();
         }
 
-        private void sliProgress_DragStarted(object sender, DragStartedEventArgs e)
+        private void ProgressBar_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            userIsDraggingSlider = true;
+            var value = (float)(e.GetPosition(ProgressBar).X / ProgressBar.ActualWidth);
+            ProgressBar.Value = value;
         }
 
-        private void sliProgress_DragCompleted(object sender, DragCompletedEventArgs e)
+        public void LoadVideo(string path)
         {
-            userIsDraggingSlider = false;
-            GameReplayMediaElement.Position = TimeSpan.FromSeconds(sliProgress.Value);
+            Player.Stop();
+            Player.LoadMedia(path);
+            Player.Play();
         }
 
-        private void sliProgress_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            lblProgressStatus.Text = TimeSpan.FromSeconds(sliProgress.Value).ToString(@"hh\:mm\:ss");
-        }
     }
 }
